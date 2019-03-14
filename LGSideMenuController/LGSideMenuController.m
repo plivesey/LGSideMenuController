@@ -140,6 +140,8 @@ LGSideMenuSwipeGestureRange LGSideMenuSwipeGestureRangeMake(CGFloat left, CGFloa
 @property (assign, nonatomic, getter=isUserLeftViewBackgroundImageFinalScale)    BOOL userLeftViewBackgroundImageFinalScale;
 @property (assign, nonatomic, getter=isUserRightViewBackgroundImageFinalScale)   BOOL userRightViewBackgroundImageFinalScale;
 
+@property (nonatomic) BOOL viewsHierarchyValidated;
+
 @end
 
 #pragma mark - Implementation
@@ -523,7 +525,11 @@ rightViewBackgroundImageFinalScale = _rightViewBackgroundImageFinalScale;
     [self leftViewsValidate];
     [self rightViewsValidate];
 
-    [self viewsHierarchyValidate];
+    // Only do this once. Otherwise, it will do it on every rotation which will call viewWillAppear/disappear every rotation
+    if (!self.viewsHierarchyValidated) {
+        self.viewsHierarchyValidated = YES;
+        [self viewsHierarchyValidate];
+    }
 
     [self rootViewsFramesValidate];
     [self leftViewsFramesValidate];
